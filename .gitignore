@@ -30,3 +30,4 @@ mysite/npm-debug.log*
 mysite/yarn-debug.log*
 mysite/yarn-error.log*
 *.pyc
+igdbaccess.ini
