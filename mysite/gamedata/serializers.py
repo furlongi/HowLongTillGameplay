@@ -12,6 +12,10 @@ class GameInfoSerializer(serializers.ModelSerializer):
         ]
 
 
+# class GameSubmissionSerializer():
+
+
+
 class IgdbSearchSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
