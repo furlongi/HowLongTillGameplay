@@ -1,4 +1,5 @@
-from django.db import models
+from django.db import models, transaction, IntegrityError
+from utils.helpers import filter_array_json
 
 
 # Create your models here.
@@ -22,3 +23,23 @@ class GameSubmissions(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     time = models.IntegerField(null=False)
     difficulty = models.FloatField(null=False)
+
+
+# Helper Methods
+
+def add_new_titles(array):
+    ids = filter_array_json('id', array)
+    found_games_ids = {i.igdb_id for i in IgdbLink.objects.filter(pk__in=ids)}
+    missing_ids = [entry for entry in array if entry['id'] not in found_games_ids]
+    gameinfo_inserts = [GameInfo(name=entry['name']) for entry in missing_ids]
+
+    for i, game in enumerate(gameinfo_inserts):
+        try:
+            with transaction.atomic():
+                game.save(force_insert=True)
+                local_id = GameInfo.objects.latest('id')
+                obj = missing_ids[i]
+                link = IgdbLink(igdb_id=obj['id'], game_id=local_id)
+                link.save(force_insert=True)
+        except IntegrityError:
+            continue

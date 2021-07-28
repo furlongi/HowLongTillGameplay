@@ -24,7 +24,7 @@ class Credentials:
         client = Credentials._get_client()
 
         wrapper = IGDBWrapper(client, access)
-        return {'data': json.loads(wrapper.api_request('games', str(search)))}
+        return json.loads(wrapper.api_request('games', str(search)))
 
 
 class SearchType:
