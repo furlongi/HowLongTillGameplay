@@ -1,9 +1,9 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
 app_name = 'gamedata'
 urlpatterns = [
-    path('search', views.index, name='index'),
+    path('search/', views.search, name='search'),
     path('submit', views.submit, name='submit')
 ]

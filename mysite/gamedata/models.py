@@ -14,7 +14,7 @@ class GameInfo(models.Model):
 
 class IgdbLink(models.Model):
     igdb_id = models.IntegerField(primary_key=True)
-    game_id = models.OneToOneField(GameInfo, on_delete=models.CASCADE)
+    game = models.OneToOneField(GameInfo, on_delete=models.CASCADE)
 
 
 class GameSubmissions(models.Model):
@@ -39,7 +39,7 @@ def add_new_titles(array):
                 game.save(force_insert=True)
                 local_id = GameInfo.objects.latest('id')
                 obj = missing_ids[i]
-                link = IgdbLink(igdb_id=obj['id'], game_id=local_id)
+                link = IgdbLink(igdb_id=obj['id'], game=local_id)
                 link.save(force_insert=True)
         except IntegrityError:
             continue
