@@ -3,9 +3,11 @@ from django.http import HttpResponse, Http404, JsonResponse, HttpResponseNotFoun
 from rest_framework.parsers import JSONParser
 from django.views.decorators.csrf import csrf_exempt
 from .models import GameInfo, add_new_titles, GameSubmissions
-from .serializers import GameInfoContainerSerializer, IgdbContainerSerializer, GameSubmissionSerializer
+from .serializers import GameInfoContainerSerializer, GameSubmissionSerializer
+from .responses import InvalidResponse, CustomResponse
 from utils.igdb import Credentials, SearchType
 from utils.helpers import filter_array_json
+from django.db.utils import IntegrityError
 
 
 # Create your views here.
@@ -43,11 +45,25 @@ def submit(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)
         sub = GameSubmissionSerializer(data=data)
+
         if sub.is_valid():
-            sub.save()
-            return HttpResponse('Worked')
+            cer = CustomResponse()
+            try:
+                game_sub = GameSubmissions(game=GameInfo(id=sub.data['game']),
+                                           time=sub.data['time'],
+                                           difficulty=sub.data['difficulty'])
+                game_sub.save()
+                cer.read_response('success')
+                return cer.create_response()
+
+            except IntegrityError:
+                # The pk for the game_id does not exist. Avoid making this occur
+                cer.read_response('does_not_exist', attribute='Game')
+                return cer.create_response()
         else:
-            print(sub.errors)
-            return HttpResponse('Failed')
+            # Validation Failed
+            resp = InvalidResponse()
+            resp.read_error(sub.errors)
+            return resp.create_response()
     else:
         return HttpResponseNotFound('<h1> Page not found <h1>')

@@ -4,6 +4,6 @@ from . import views
 
 app_name = 'gamedata'
 urlpatterns = [
-    path('search/', views.search, name='search'),
+    path('search', views.search, name='search'),
     path('submit', views.submit, name='submit')
 ]
