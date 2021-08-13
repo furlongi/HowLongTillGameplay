@@ -9,25 +9,25 @@ configs.ini
 
 ### React
 
-mysite/node_modules
-mysite/.pnp
-mysite/.pnp.js
+fesite/node_modules
+fesite/.pnp
+fesite/.pnp.js
 
 # testing
-mysite/coverage
+fesite/coverage
 
 # production
-mysite/build
+fesite/build
 
 # misc
-mysite/.DS_Store
-mysite/.env.local
-mysite/.env.development.local
-mysite/.env.test.local
-mysite/.env.production.local
+fesite/.DS_Store
+fesite/.env.local
+fesite/.env.development.local
+fesite/.env.test.local
+fesite/.env.production.local
 
-mysite/npm-debug.log*
-mysite/yarn-debug.log*
-mysite/yarn-error.log*
+fesite/npm-debug.log*
+fesite/yarn-debug.log*
+fesite/yarn-error.log*
 *.pyc
-igdbaccess.ini
+apiaccess.ini

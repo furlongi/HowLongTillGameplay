@@ -8,8 +8,8 @@ class Credentials:
     @staticmethod
     def _get_token():
         token = RawConfigParser()
-        token.read('../igdbaccess.ini')
-        return token.get('access', 'TOKEN')
+        token.read('../apiaccess.ini')
+        return token.get('igdb', 'TOKEN')
 
     @staticmethod
     def _get_client():

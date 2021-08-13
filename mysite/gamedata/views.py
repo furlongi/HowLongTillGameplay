@@ -6,6 +6,7 @@ from .models import GameInfo, add_new_titles, GameSubmissions
 from .serializers import GameInfoContainerSerializer, GameSubmissionSerializer
 from .responses import InvalidResponse, CustomResponse
 from utils.igdb import Credentials, SearchType
+from utils.rawg import RawgSearch
 from utils.helpers import filter_array_json
 from django.db.utils import IntegrityError
 
@@ -25,6 +26,11 @@ def search(request):
         print(api)
         results = Credentials.request(api)
         print(results)
+
+        # rawg = RawgSearch()
+        # rawg.set_search(game_name)
+        # rawg.set_length(10)
+        # rawg.request()
 
         # Add Id's if games are missing
         add_new_titles(results)
