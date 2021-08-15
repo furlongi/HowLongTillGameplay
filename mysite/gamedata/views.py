@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, Http404, JsonResponse, HttpResponseNotFound
 from rest_framework.parsers import JSONParser
 from django.views.decorators.csrf import csrf_exempt
-from .models import GameInfo, add_new_titles, GameSubmissions
+from .models import GameInfo, add_new_titles, add_new_titles_rawg, GameSubmissions
 from .serializers import GameInfoContainerSerializer, GameSubmissionSerializer
 from .responses import InvalidResponse, CustomResponse
 from utils.igdb import Credentials, SearchType
@@ -18,26 +18,28 @@ def search(request):
     if request.method == 'GET':
         game_name = request.GET.get('name', None)
 
-        # IGDB API
-        api = SearchType()
-        api.set_search(game_name)
-        api.add_field('name')
-        api.add_where('rating > 0')
-        print(api)
-        results = Credentials.request(api)
-        print(results)
+        # IGDB API - No longer used
+        # api = SearchType()
+        # api.set_search(game_name)
+        # api.add_field('name')
+        # api.add_where('rating > 0')
+        # print(api)
+        # results = Credentials.request(api)
+        # print(results)
 
-        # rawg = RawgSearch()
-        # rawg.set_search(game_name)
-        # rawg.set_length(10)
-        # rawg.request()
+        # RAWG API
+        rawg = RawgSearch()
+        rawg.set_search(game_name)
+        rawg.set_length(10)
+        results = rawg.request()
 
         # Add Id's if games are missing
-        add_new_titles(results)
+        add_new_titles_rawg(results)
 
         # Get ResultSet
         array = filter_array_json('id', results)
-        rs = {'data': GameInfo.objects.filter(igdblink__igdb_id__in=array)}
+        # rs = {'data': GameInfo.objects.filter(igdblink__igdb_id__in=array)}
+        rs = {'data': GameInfo.objects.filter(rawglink__rawg_id__in=array)}
 
         # Create and Return HttpResponse
         serial = GameInfoContainerSerializer(rs)

@@ -6,6 +6,7 @@ projectnotes.txt
 pyvenv.cfg
 /venv/
 configs.ini
+mysite/gamedata/migrations/
 
 ### React
 

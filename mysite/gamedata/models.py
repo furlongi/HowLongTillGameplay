@@ -17,6 +17,12 @@ class IgdbLink(models.Model):
     game = models.OneToOneField(GameInfo, on_delete=models.CASCADE)
 
 
+class RawgLink(models.Model):
+    rawg_id = models.IntegerField(primary_key=True)
+    game = models.OneToOneField(GameInfo, on_delete=models.CASCADE)
+    slug = models.CharField(max_length=256, null=True)
+
+
 class GameSubmissions(models.Model):
     sub_id = models.BigAutoField(primary_key=True)
     game = models.ForeignKey(GameInfo, on_delete=models.CASCADE)
@@ -40,6 +46,24 @@ def add_new_titles(array):
                 local_id = GameInfo.objects.latest('id')
                 obj = missing_ids[i]
                 link = IgdbLink(igdb_id=obj['id'], game=local_id)
+                link.save(force_insert=True)
+        except IntegrityError:
+            continue
+
+
+def add_new_titles_rawg(array):
+    ids = filter_array_json('id', array)
+    found_games_ids = {i.rawg_id for i in RawgLink.objects.filter(pk__in=ids)}
+    missing_ids = [entry for entry in array if entry['id'] not in found_games_ids]
+    gameinfo_inserts = [GameInfo(name=entry['name']) for entry in missing_ids]
+
+    for i, game in enumerate(gameinfo_inserts):
+        try:
+            with transaction.atomic():
+                game.save(force_insert=True)
+                local_id = GameInfo.objects.latest('id')
+                obj = missing_ids[i]
+                link = RawgLink(rawg_id=obj['id'], game=local_id, slug=obj["slug"])
                 link.save(force_insert=True)
         except IntegrityError:
             continue

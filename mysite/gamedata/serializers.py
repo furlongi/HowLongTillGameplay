@@ -32,6 +32,7 @@ def _validate_difficulty(difficulty):
 class GameInfoSerializer(serializers.ModelSerializer):
 
     igdb_id = serializers.ReadOnlyField(source='igdblink.igdb_id')
+    rawg_id = serializers.ReadOnlyField(source='rawglink.rawg_id')
 
     class Meta:
         model = GameInfo
@@ -40,7 +41,8 @@ class GameInfoSerializer(serializers.ModelSerializer):
             'name',
             'time',
             'difficulty',
-            'igdb_id'
+            'igdb_id',
+            'rawg_id'
         ]
 
 
