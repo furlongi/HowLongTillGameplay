@@ -1,24 +1,32 @@
-import React, {useState} from "react";
-import { useParams } from "react-router-dom";
+import React, {useState, useEffect} from "react";
 import Query from "../service/Query";
 
+
 const Search = ({history, location, match}) => {
-    const {name} = useParams();
-    console.log(location.search);
-    console.log(name);
-    console.log(match.params);
+    const [isLoading, setLoading] = useState(true);
+    const [results, setResults] = useState();
 
-    Query.search("?name=xeno")
-         .then(response => {})
-         .catch(response => {console.log(response);});
+    useEffect(() => {
+        Query.search(window.location.search)
+            .then(response => {
+                setResults(response.data); 
+                // Remember results are encapsulated by another 'data'
+                setLoading(false);
+            })
+            .catch(response => 
+                {
+                    console.log(response);
+                }
+        ); // Replace catch later
+    }, []);
 
-    return (
+    return ( isLoading ? (<h1>Loading...</h1>) : (
         <div className="form-search">
             <div className="form-items">
-
             </div>
             <h1>Search</h1>
         </div>
+        )
     );
 }
 

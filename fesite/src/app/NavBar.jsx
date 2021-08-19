@@ -11,7 +11,7 @@ const NavBar = () => {
     if (gameName == null) {
       history.push({pathname:`/search`});
     } else {
-      history.push({pathname:`/search?name='${gameName}'`});
+      history.push({pathname:`/search?name=${gameName}`});
     }
   }
 
