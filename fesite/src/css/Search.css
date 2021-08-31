@@ -1,0 +1,15 @@
+.card-columns {
+    column-count: 2;
+}
+
+.box-style {
+    border: 1px solid black;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+}
+
+.box-image {
+    max-height: 120;
+    width: 100;
+}

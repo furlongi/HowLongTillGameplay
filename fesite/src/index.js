@@ -9,6 +9,7 @@ import './css/Index.css';
 import './css/App.css';
 import './css/Navbar.css';
 import './css/Form.css';
+import './css/Search.css';
 
 ReactDOM.render(
   <BrowserRouter>
