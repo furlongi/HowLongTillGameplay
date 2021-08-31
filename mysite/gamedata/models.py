@@ -10,6 +10,7 @@ class GameInfo(models.Model):
     time = models.IntegerField(null=True)
     difficulty = models.FloatField(null=True)
     counts = models.IntegerField(default=0, null=False)
+    cover = models.URLField(null=True)
 
 
 class IgdbLink(models.Model):
@@ -37,9 +38,10 @@ def add_new_titles(array):
     ids = filter_array_json('id', array)
     found_games_ids = {i.igdb_id for i in IgdbLink.objects.filter(pk__in=ids)}
     missing_ids = [entry for entry in array if entry['id'] not in found_games_ids]
-    gameinfo_inserts = [GameInfo(name=entry['name']) for entry in missing_ids]
+    games_to_inserts = [GameInfo(name=entry['name'], cover=format_image_url(entry["cover"]))
+                        for entry in missing_ids]
 
-    for i, game in enumerate(gameinfo_inserts):
+    for i, game in enumerate(games_to_inserts):
         try:
             with transaction.atomic():
                 game.save(force_insert=True)
@@ -55,9 +57,9 @@ def add_new_titles_rawg(array):
     ids = filter_array_json('id', array)
     found_games_ids = {i.rawg_id for i in RawgLink.objects.filter(pk__in=ids)}
     missing_ids = [entry for entry in array if entry['id'] not in found_games_ids]
-    gameinfo_inserts = [GameInfo(name=entry['name']) for entry in missing_ids]
+    games_to_inserts = [GameInfo(name=entry['name']) for entry in missing_ids]
 
-    for i, game in enumerate(gameinfo_inserts):
+    for i, game in enumerate(games_to_inserts):
         try:
             with transaction.atomic():
                 game.save(force_insert=True)
@@ -67,3 +69,11 @@ def add_new_titles_rawg(array):
                 link.save(force_insert=True)
         except IntegrityError:
             continue
+
+
+def format_image_url(data):
+    if data is None or "url" not in data:
+        return None
+    url = data["url"]
+    return "https:" + url.replace("t_thumb", "t_cover_big")
+

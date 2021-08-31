@@ -22,6 +22,7 @@ def search(request):
         api = SearchType()
         api.set_search(game_name)
         api.add_field('name')
+        api.add_field('cover.url')
         api.add_where('rating > 0')
         results = Credentials.request(api)
 
