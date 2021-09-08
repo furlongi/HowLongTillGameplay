@@ -1,15 +1,55 @@
+:root {
+    --box-height: 220px;
+}
+
 .card-columns {
     column-count: 2;
+    display: inline-block;
 }
+
 
 .box-style {
-    border: 1px solid black;
+    --box-width: 30vw;
+    --box-padding: 10px;
+
     display: flex;
     flex-flow: row nowrap;
+    border: 1px solid black;
     justify-content: flex-start;
+
+    height: var(--box-height);
+    width: var(--box-width);
+    min-width: calc(var(--box-height) * 2.25);
+    max-width: calc(var(--box-height) * 3.25);
+    padding: var(--box-padding);
 }
 
-.box-image {
-    max-height: 120;
-    width: 100;
+
+.box-style img {
+    --imgSize: calc( var(--box-height) - var(--box-padding) - 10px);
+    height: var(--imgSize);
+    width: calc( var(--imgSize) * .75);
+}
+
+
+.box-style img:hover {
+    cursor: pointer;
+}
+
+
+.game-info {
+    display: flex;
+    flex-flow: column;
+}
+
+
+.game-title {
+    padding: 0px 0px 0px 10px;
+}
+
+
+.game-box {
+    border: 1px solid black;
+    height: 35px;
+    width: 100px;
 }

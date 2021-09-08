@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import Query from "../service/Query";
+import BoxColorInfo from "../items/gameBoxColor";
 
 
 const Search = ({history, location, match}) => {
@@ -32,17 +33,18 @@ const Search = ({history, location, match}) => {
 
                     return (
                         <li className="box-style">
-                            <div className="box-image">
+                            <div>
                                 <a href={gameUrl}>
                                     <img alt="Game Box Art" src={entry["cover"]}/>
                                 </a>
                             </div>
-                            <div>
-                                <h3>
+                            <div className="game-info">
+                                <h3 className="game-title">
                                     <a href={gameUrl}>
                                         {entry["name"]}
                                     </a>
                                 </h3>
+                                {BoxColorInfo.colorBox(BoxColorInfo.timeFormat, entry["time"])}
                             </div>
                         </li>
                     )}
